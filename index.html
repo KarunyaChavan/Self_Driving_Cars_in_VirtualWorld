@@ -7,18 +7,23 @@
     <body>
         <h1>World Editor</h1>
         <canvas id="myCanvas"></canvas>
-        <!-- Defining Controls (buttons) to add points and segments -->
+        
         <div id="controls">
-            <button onclick="addRandomPoint()">Add Point</button>
+            <!-- Defining Controls (buttons) to add points and segments -->
+            <!-- <button onclick="addRandomPoint()">Add Point</button>
             <button onclick="addRandomSegment()">Add Segment</button>
             <button onclick="removeRandomSegment()">Remove Segment</button>
             <button onclick="removeRandomPoint()">Remove Point</button>
-            <button onclick="removeAll()">Clear</button>
+            <button onclick="removeAll()">Clear</button> -->
+
         </div>
 
         <script src="js/math/graph.js"></script>
+        <script src="js/graphEditor.js"></script>
+        <script src="js/math/utils.js"></script>
         <script src="js/primitives/point.js"></script>
         <script src="js/primitives/segment.js"></script>
+
         <script>
 
             myCanvas.width = 600;
@@ -27,56 +32,56 @@
             const ctx = myCanvas.getContext("2d");
 
             // Functions to implement basic controls(buttons) for static version
-            function addRandomPoint(){
-                const success = graph.tryAddPoint(
-                    new Point(
-                        Math.random() * myCanvas.width,
-                        Math.random() * myCanvas.height
-                    )
-                );
-                ctx.clearRect(0,0, myCanvas.width, myCanvas.height); //clearing the canvas initially
-                graph.draw(ctx);
-                console.log("Point Added: ", success);
-            }
+            // function addRandomPoint(){
+            //     const success = graph.tryAddPoint(
+            //         new Point(
+            //             Math.random() * myCanvas.width,
+            //             Math.random() * myCanvas.height
+            //         )
+            //     );
+            //     ctx.clearRect(0,0, myCanvas.width, myCanvas.height); //clearing the canvas initially
+            //     graph.draw(ctx);
+            //     console.log("Point Added: ", success);
+            // }
 
-            function addRandomSegment(){
-                const index1 = Math.floor(Math.random() * graph.points.length);
-                const index2 = Math.floor(Math.random() * graph.points.length);
-                const success = graph.tryAddSegment(
-                        new Segment(graph.points[index1], graph.points[index2])
-                );
-                ctx.clearRect(0,0, myCanvas.width, myCanvas.height);
-                graph.draw(ctx);
-                console.log("Segment Added: ", success)
-            }
+            // function addRandomSegment(){
+            //     const index1 = Math.floor(Math.random() * graph.points.length);
+            //     const index2 = Math.floor(Math.random() * graph.points.length);
+            //     const success = graph.tryAddSegment(
+            //             new Segment(graph.points[index1], graph.points[index2])
+            //     );
+            //     ctx.clearRect(0,0, myCanvas.width, myCanvas.height);
+            //     graph.draw(ctx);
+            //     console.log("Segment Added: ", success)
+            // }
 
-            function removeRandomSegment(){
-                if(graph.segments.length == 0) {
-                    console.log("No Segments");
-                    return;
-                }
-                const index = Math.floor(Math.random() * graph.segments.length);
-                graph.removeSegment(graph.segments[index]);
-                ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
-                graph.draw(ctx);
-            }
+            // function removeRandomSegment(){
+            //     if(graph.segments.length == 0) {
+            //         console.log("No Segments");
+            //         return;
+            //     }
+            //     const index = Math.floor(Math.random() * graph.segments.length);
+            //     graph.removeSegment(graph.segments[index]);
+            //     ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+            //     graph.draw(ctx);
+            // }
 
-            function removeRandomPoint(){
-                if(graph.points.length == 0) {
-                    console.log("No Points");
-                    return;
-                }
-                const index = Math.floor(Math.random() * graph.points.length);
-                graph.removePoint(graph.points[index]);
-                ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
-                graph.draw(ctx);
-            }
+            // function removeRandomPoint(){
+            //     if(graph.points.length == 0) {
+            //         console.log("No Points");
+            //         return;
+            //     }
+            //     const index = Math.floor(Math.random() * graph.points.length);
+            //     graph.removePoint(graph.points[index]);
+            //     ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+            //     graph.draw(ctx);
+            // }
 
-            function removeAll(){
-                graph.dispose();
-                ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
-                graph.draw(ctx);
-            }
+            // function removeAll(){
+            //     graph.dispose();
+            //     ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+            //     graph.draw(ctx);
+            // }
 
             const p1 = new Point(200, 200);
             const p2 = new Point(500, 200);
@@ -89,7 +94,16 @@
             const s4 = new Segment(p2, p3);
 
             const graph = new Graph([p1,p2,p3,p4], [s1,s2,s3,s4]);
-            graph.draw(ctx);
+            const graphEditor = new GraphEditor(myCanvas, graph); //myCanvas would be used for event listening
+
+            animate();
+
+            function animate(){
+                ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+                graphEditor.display();
+                requestAnimationFrame(animate);
+            }
+
         </script>
     </body>
 </html>
