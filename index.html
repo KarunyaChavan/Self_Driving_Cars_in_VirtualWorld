@@ -16,9 +16,12 @@
             <button onclick="removeRandomPoint()">Remove Point</button>
             <button onclick="removeAll()">Clear</button> -->
 
+            <button onclick="dispose()" style="background-color: steelblue;">🗑️</button>
+            <button onclick="save()" style="background-color: steelblue;">📄</button>
         </div>
 
         
+        <script src="js/viewport.js"></script>
         <script src="js/graphEditor.js"></script>
         <script src="js/math/utils.js"></script>
         <script src="js/math/graph.js"></script>
@@ -84,27 +87,27 @@
             //     graph.draw(ctx);
             // }
 
-            const p1 = new Point(200, 200);
-            const p2 = new Point(500, 200);
-            const p3 = new Point(400, 400);
-            const p4 = new Point(100, 300);
-
-            const s1 = new Segment(p1, p2);
-            const s2 = new Segment(p1, p3);
-            const s3 = new Segment(p1, p4);
-            const s4 = new Segment(p2, p3);
-
-            const graph = new Graph([p1,p2,p3,p4], [s1,s2,s3,s4]);
-            const graphEditor = new GraphEditor(myCanvas, graph); //myCanvas would be used for event listening
+            const graphString = localStorage.getItem("graph");
+            const graphInfo = graphString ? JSON.parse(graphString) : null;
+            const graph = graphInfo ? Graph.load(graphInfo) : new Graph();
+            const viewPort = new ViewPort(myCanvas);
+            const graphEditor = new GraphEditor(viewPort, graph); //myCanvas would be used for event listening
 
             animate();
 
             function animate(){
-                ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
+                viewPort.reset();
                 graphEditor.display();
                 requestAnimationFrame(animate);
             }
 
+            function dispose(){
+                graphEditor.dispose();
+            }
+
+            function save(){
+                localStorage.setItem("graph", JSON.stringify(graph));
+            }
         </script>
     </body>
 </html>

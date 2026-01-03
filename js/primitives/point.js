@@ -23,7 +23,6 @@ class Point{
         }
 
         if(fill){
-            console.log(fill);
             ctx.beginPath();
             ctx.fillStyle = "yellow";
             ctx.arc(this.x, this.y, rad * 0.4, 0, Math.PI * 2);
