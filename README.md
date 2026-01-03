@@ -7,7 +7,10 @@ The **Dynamic Graph Editor** allows users to create, edit, and manipulate graph 
 
 ## 📌 Overview
 
-![Dynamic Graph Editor Demo](assets/dynamic-graph-editor.gif)
+<p align="center">
+  <img src="assets/dynamicGraphEditorVideo.gif" alt="Dynamic Graph Editor Demo" width="500">
+</p>
+
 
 The Dynamic Graph Editor is designed for users who need to **visually construct and experiment with graph structures** without writing code. It serves as a foundational tool for learning, prototyping, and extending graph-based systems.
 
