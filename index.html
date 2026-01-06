@@ -109,10 +109,17 @@
 
             function dispose(){
                 graphEditor.dispose();
+                // Reset to a fresh graph instance
+                const emptyGraph = new Graph();
+                graphEditor.graph = emptyGraph;
+                world.graph = emptyGraph;
+                world.envelopes = [];
+                world.intersections = [];
             }
 
             function save(){
-                localStorage.setItem("graph", JSON.stringify(graph));
+                // Persist the current working graph (handles post-dispose cases)
+                localStorage.setItem("graph", JSON.stringify(graphEditor.graph));
             }
         </script>
     </body>

@@ -16,19 +16,25 @@ class World{
                 new Envelope(seg, this.roadWidth, this.roadRoundness)
             );
         }
-        //Avoiding segments' intersections
-        this.intersections = Polygon.break(
-            this.envelopes[0].poly,
-            this.envelopes[1].poly
-        )
+        // Avoiding segments' intersections
+        // Safeguard when there are fewer than 2 envelopes (e.g., after dispose)
+        // this.intersections = [];
+        // if(this.envelopes.length >= 2){
+        //     this.intersections = Polygon.break(
+        //         this.envelopes[0].poly,
+        //         this.envelopes[1].poly
+        //     );
+        // }
+
+        Polygon.multiBreak(this.envelopes.map((e) => e.poly));
     }
 
     draw(ctx){
         for(const env of this.envelopes){
             env.draw(ctx);
         }
-        for(const int of this.intersections){
-            int.draw(ctx, {color: "red", size: 6});
-        }
+        // for(const int of this.intersections){ //to mark intersection pts
+        //     int.draw(ctx, {color: "red", size: 6}); 
+        // }
     }
 }
