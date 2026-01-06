@@ -21,12 +21,15 @@
         </div>
 
         
+        <script src="js/world.js"></script>
         <script src="js/viewport.js"></script>
         <script src="js/graphEditor.js"></script>
         <script src="js/math/utils.js"></script>
         <script src="js/math/graph.js"></script>
         <script src="js/primitives/point.js"></script>
         <script src="js/primitives/segment.js"></script>
+        <script src="js/primitives/polygon.js"></script>
+        <script src="js/primitives/envelope.js"></script>
 
         <script>
 
@@ -90,6 +93,7 @@
             const graphString = localStorage.getItem("graph");
             const graphInfo = graphString ? JSON.parse(graphString) : null;
             const graph = graphInfo ? Graph.load(graphInfo) : new Graph();
+            const world = new World(graph);
             const viewPort = new ViewPort(myCanvas);
             const graphEditor = new GraphEditor(viewPort, graph); //myCanvas would be used for event listening
 
@@ -97,6 +101,8 @@
 
             function animate(){
                 viewPort.reset();
+                world.generate();
+                world.draw(ctx);
                 graphEditor.display();
                 requestAnimationFrame(animate);
             }
