@@ -33,6 +33,29 @@ class Polygon{
         }
     }
 
+    static union(polys){
+        Polygon.multiBreak(polys);
+        const keptSegments = [];
+
+        for(let i=0;i < polys.length; i++){
+            for(const seg of polys[i].segments){
+                let keep = true;
+                for(let j = 0; j < polys.length; j++){
+                    if( i != j){
+                        if(polys[j].containsSegment(seg)){
+                            keep = false;
+                            break;
+                        }
+                    }
+                }
+                if(keep){
+                    keptSegments.push(seg);
+                }
+            }
+        }
+        return keptSegments;
+    }
+
     static multiBreak(polys){
         for(let i=0; i < polys.length - 1; i++){
             for(let j=i+1; j < polys.length; j++){
@@ -41,17 +64,35 @@ class Polygon{
         }
     }
 
+    containsSegment(seg) {
+        const midpoint = average(seg.p1, seg.p2);
+        return this.containsPoint(midpoint);
+    }
+
+    containsPoint(point){
+        const outerPoint = new Point(-1000, -1000);
+        //points inside polygon will intersect odd number of times
+        let intersectionCount = 0;
+        for(const seg of this.segments){
+            const int = getIntersection(outerPoint, point, seg.p1, seg.p2);
+            if(int){
+                intersectionCount++;
+            }
+        }
+        return intersectionCount % 2 == 1;
+    }
+
     drawSegments(ctx){
         for(const seg of this.segments){
             seg.draw(ctx, { color: getRandomColor(), width: 5 });
         }
     }
 
-    draw(ctx, {stroke="blue", linewidth = 2, fill = "rgba(0,0,255,0.3)"} = {}){
+    draw(ctx, {stroke="blue", lineWidth = 2, fill = "rgba(0,0,255,0.3)"} = {}){
         ctx.beginPath();
         ctx.fillStyle = fill;
         ctx.strokeStyle = stroke;
-        ctx.linewidth = linewidth;
+        ctx.lineWidth = lineWidth;
         ctx.moveTo(this.points[0].x, this.points[0].y);
         for( let i=1; i < this.points.length; i++){
             ctx.lineTo(this.points[i].x, this.points[i].y);
