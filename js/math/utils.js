@@ -27,6 +27,10 @@ function subtract(p1, p2){
     return new Point(p1.x - p2.x, p1.y - p2.y);
 }
 
+function dot(p1,p2){
+    return p1.x * p2.x + p1.y * p2.y;
+}
+
 function scale(p, scaler){
     return new Point(p.x * scaler, p.y * scaler);
 }
