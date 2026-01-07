@@ -6,6 +6,10 @@ class Graph{
         this.segments = segments;
     }
 
+    hash(){
+        return JSON.stringify(this);
+    }
+
     addPoint(point){
         this.points.push(point);
     }

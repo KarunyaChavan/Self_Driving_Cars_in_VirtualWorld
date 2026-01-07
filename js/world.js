@@ -4,7 +4,8 @@ class World{
         roundness = 10,
         buildingWidth = 150,
         buildingMinLength = 150,
-        spacing = 50
+        spacing = 50,
+        treeSize = 160
     ){
         this.graph = graph;
         this.roadWidth = roadWidth;
@@ -12,6 +13,7 @@ class World{
         this.buildingWidth = buildingWidth;
         this.buildingMinLength = buildingMinLength;
         this.spacing = spacing;
+        this.treeSize = treeSize;
 
         this.envelopes = [];
         this.roadBorders = [];
@@ -46,13 +48,38 @@ class World{
         const top = Math.min(...points.map((p) => p.y));
         const bottom = Math.max(...points.map((p) => p.y));
 
+        const illegalPolys = [
+            ...this.buildings,
+            ...this.envelopes.map((e) => e.poly)
+        ];
+
         const trees = [];
         while(trees.length < count){
             const p = new Point(
                 lerp(left, right, Math.random()),
                 lerp(top, bottom, Math.random())
             );
-            trees.push(p);
+            
+            let keep = true;
+            for(const poly of illegalPolys){
+                if(poly.containsPoint(p)){
+                    keep = false;
+                    break;
+                }
+            }
+            
+            if(keep){
+                for(const tree of trees){
+                    if(distance(tree, p) < this.treeSize){
+                        keep = false;
+                        break;
+                    }
+                }
+            }
+
+            if(keep){
+                trees.push(p);
+            }
         }
         return trees;
     }
@@ -135,7 +162,7 @@ class World{
         }
         //Drawing Trees
         for(const tree of this.trees){
-            tree.draw(ctx, { color: "black", size: 8 });
+            tree.draw(ctx, { color: "rgba(0,0,0,0.5)", size: this.treeSize });
         }
     }
 }

@@ -97,12 +97,15 @@
             const viewPort = new ViewPort(myCanvas);
             const graphEditor = new GraphEditor(viewPort, graph); //myCanvas would be used for event listening
 
-             
+            let oldGraphHash = graph.hash(); //implemented hash to avoid rapid re-rendering of graph
             animate();
 
             function animate(){
                 viewPort.reset();
-                world.generate();
+                if(graph.hash() != oldGraphHash){
+                    world.generate();
+                    oldGraphHash = graph.hash();
+                }
                 world.draw(ctx);
                 ctx.globalAlpha = 0.2;
                 graphEditor.display();
