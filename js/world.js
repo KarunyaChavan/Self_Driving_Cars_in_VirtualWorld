@@ -16,6 +16,7 @@ class World{
         this.envelopes = [];
         this.roadBorders = [];
         this.buildings = [];
+        this.trees = [];
 
         this.generate();
     }
@@ -29,6 +30,31 @@ class World{
         }
         this.roadBorders = Polygon.union(this.envelopes.map((e) => e.poly));
         this.buildings = this.#generateBuildings();
+        this.trees = this.#generateTrees();
+    }
+
+    #generateTrees(count = 10){
+        const points = [
+            ...this.roadBorders.map((s) => [s.p1, s.p2]).flat(),
+            ...this.buildings.map((b) => b.points).flat()
+        ];
+
+        if(points.length === 0) return [];
+
+        const left = Math.min(...points.map((p) => p.x));
+        const right = Math.max(...points.map((p) => p.x));
+        const top = Math.min(...points.map((p) => p.y));
+        const bottom = Math.max(...points.map((p) => p.y));
+
+        const trees = [];
+        while(trees.length < count){
+            const p = new Point(
+                lerp(left, right, Math.random()),
+                lerp(top, bottom, Math.random())
+            );
+            trees.push(p);
+        }
+        return trees;
     }
 
     #generateBuildings() {
@@ -71,7 +97,22 @@ class World{
             }
         }
 
-        return supports;
+        const bases = [];
+        for(const seg of supports){
+            bases.push(new Envelope(seg, this.buildingWidth).poly)
+        }
+
+        //Removing intersecting polygons
+        for(let i=0; i < bases.length; i++){
+            for(let j=i+1; j < bases.length; j++){
+                if(bases[i].intersectsPoly(bases[j])){
+                    bases.splice(j , 1);
+                    j--;
+                }
+            }
+        }
+
+        return bases;
     }
 
     draw(ctx){
@@ -88,8 +129,13 @@ class World{
         for(const seg of this.roadBorders){
             seg.draw(ctx, {color: "white", width: 4});
         }
+        //Drawing Buildings
         for(const bld of this.buildings){
             bld.draw(ctx);
+        }
+        //Drawing Trees
+        for(const tree of this.trees){
+            tree.draw(ctx, { color: "black", size: 8 });
         }
     }
 }
