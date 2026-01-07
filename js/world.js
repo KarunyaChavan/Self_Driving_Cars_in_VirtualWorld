@@ -174,13 +174,24 @@ class World{
         for(const seg of this.roadBorders){
             seg.draw(ctx, {color: "white", width: 4});
         }
-        //Drawing Buildings
-        for(const bld of this.buildings){
-            bld.draw(ctx, viewPoint);
+        
+        //avoiding overlapping of 3d structures by groupping and sorting them while drawing
+        const items = [...this.buildings, ...this.trees];
+        items.sort(
+            (a,b) => b.base.distanceToPoint(viewPoint) - a.base.distanceToPoint(viewPoint)
+        );
+        for(const item of items){
+            item.draw(ctx, viewPoint);
         }
-        //Drawing Trees
-        for(const tree of this.trees){
-            tree.draw(ctx, viewPoint);
-        }
+
+        //Drawing individually without groupping led to overlapping of 3d structures
+        // //Drawing Buildings
+        // for(const bld of this.buildings){
+        //     bld.draw(ctx, viewPoint);
+        // }
+        // //Drawing Trees
+        // for(const tree of this.trees){
+        //     tree.draw(ctx, viewPoint);
+        // }
     }
 }
