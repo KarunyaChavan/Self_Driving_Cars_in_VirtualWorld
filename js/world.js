@@ -19,6 +19,9 @@ class World{
         this.roadBorders = [];
         this.buildings = [];
         this.trees = [];
+        this.laneGuides = [];
+
+        this.markings = [];
 
         this.generate();
     }
@@ -33,6 +36,24 @@ class World{
         this.roadBorders = Polygon.union(this.envelopes.map((e) => e.poly));
         this.buildings = this.#generateBuildings();
         this.trees = this.#generateTrees();
+
+        this.laneGuides.length = 0;
+        this.laneGuides.push(...this.#generateLaneGuides());
+    }
+
+    #generateLaneGuides(){
+        const tmpEnvelopes = [];
+        for(const seg of this.graph.segments){
+            tmpEnvelopes.push(
+                new Envelope(
+                    seg,
+                    this.roadWidth/2,
+                    this.roadRoundness
+                )
+            );
+        }
+        const segments = Polygon.union(tmpEnvelopes.map((e) => e.poly));
+        return segments;
     }
 
     #generateTrees(){
@@ -110,7 +131,7 @@ class World{
                     this.roadWidth + this.buildingWidth + this.spacing * 2,
                     this.roadRoundness
                 )
-            )
+            );
         }
 
         const guides = Polygon.union(tmpEnvelopes.map((e) => e.poly)); //building will be constructed on top of guides
@@ -164,9 +185,11 @@ class World{
         for(const env of this.envelopes){
             env.draw(ctx, { fill: "#BBB", stroke: "#BBB", lineWidth: 15 });
         }
-        // for(const int of this.intersections){ //to mark intersection pts
-        //     int.draw(ctx, {color: "red", size: 6}); 
-        // } 
+        
+        for(const marking of this.markings){
+            marking.draw(ctx);
+        }
+
         for(const seg of this.graph.segments){
             seg.draw(ctx, {color: "white", width: 3, dash: [10, 10]});
         }
@@ -184,14 +207,9 @@ class World{
             item.draw(ctx, viewPoint);
         }
 
-        //Drawing individually without groupping led to overlapping of 3d structures
-        // //Drawing Buildings
-        // for(const bld of this.buildings){
-        //     bld.draw(ctx, viewPoint);
-        // }
-        // //Drawing Trees
-        // for(const tree of this.trees){
-        //     tree.draw(ctx, viewPoint);
+        //Detecting the markings width along the road
+        // for(const seg of this.laneGuides){
+        //     seg.draw(ctx, {color: "red"});
         // }
     }
 }

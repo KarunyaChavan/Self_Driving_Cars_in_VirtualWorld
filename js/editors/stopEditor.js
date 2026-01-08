@@ -1,0 +1,88 @@
+class StopEditor{
+    constructor(viewport, world){
+        this.viewport = viewport;
+        this.world = world;
+
+        this.canvas = viewport.canvas;
+        this.ctx = this.canvas.getContext("2d");
+
+        this.mouse = null;
+        this.intent = null;
+
+        this.markings = world.markings;
+    }
+
+     enable(){
+        this.#addEventListeners();
+    }
+
+    disable(){
+        this.#removeEventListeners();
+    }
+
+    #addEventListeners(){
+        this.boundMouseDown = this.#handleMouseDown.bind(this);
+        this.boundMouseMove = this.#handleMouseMove.bind(this);
+        this.boundContextMenu = (evt) => evt.preventDefault();
+        this.canvas.addEventListener("mousedown", this.boundMouseDown);
+        this.canvas.addEventListener("mousemove", this.boundMouseMove);
+        this.canvas.addEventListener("mouseup", this.boundMouseUp);
+        //to get rid of right click menu
+        this.canvas.addEventListener("contextmenu", this.boundContextMenu);
+    }
+
+    #removeEventListeners(){
+        this.canvas.removeEventListener("mousedown", this.boundMouseDown);
+        this.canvas.removeEventListener("mousemove", this.boundMouseMove);
+        this.canvas.removeEventListener("contextmenu", this.boundContextMenu);
+    }
+
+    #handleMouseMove(evt){
+        this.mouse = this.viewport.getMouse(evt, true);
+        const seg = getNearestSegment( //needed to place the markings properly
+            this.mouse, 
+            this.world.laneGuides, 
+            13 * this.viewport.zoom
+        );
+        if(seg){
+            const proj = seg.projectPoint(this.mouse); //projecting mouse location to identify center of the road marking
+            if(proj.offset >= 0 && proj.offset <= 1){
+                this.intent = new Stop(
+                    proj.point,
+                    seg.directionVector(),
+                    world.roadWidth/2,
+                    world.roadWidth/2
+                );
+            } else{
+                this.intent = null;
+            }
+        } else{
+            this.intent = null;
+        }
+    }
+
+    #handleMouseDown(evt){
+        if(evt.button == 0){ //left click
+            if(this.intent){
+                this.markings.push(this.intent);
+                this.intent = null;
+            }
+        }
+        if(evt.button == 2){ //right click
+            for(let i=0; i < this.markings.length; i++){
+                const poly = this.markings[i].poly;
+                if(poly.containsPoint(this.mouse)){
+                    this.markings.splice(i, 1);
+                    return;
+                }
+            }
+        }
+    }
+
+    display(){
+        if(this.intent){
+            this.intent.draw(this.ctx);
+        }
+    }
+
+}
