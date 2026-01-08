@@ -48,10 +48,16 @@
             const graphInfo = graphString ? JSON.parse(graphString) : null;
             const graph = graphInfo ? Graph.load(graphInfo) : new Graph();
             const world = new World(graph);
+
             const viewPort = new ViewPort(myCanvas);
-            const graphEditor = new GraphEditor(viewPort, graph); //myCanvas would be used for event listening
-            const stopEditor = new StopEditor(viewPort, world);
-            const zebraEditor = new ZebraEditor(viewPort, world);
+
+            const graphEditor = new GraphEditor(viewPort, graph);
+
+            const tools = {
+                graph: { button: graphBtn, editor: new GraphEditor(viewPort, graph)},
+                stop: { button: stopBtn, editor: new StopEditor(viewPort, world)},
+                zebra: {button: zebraBtn, editor: new ZebraEditor(viewPort, world)}
+            };
 
             let currentGraphHash = graph.hash(); // track active graph hash to avoid unnecessary regeneration
 
@@ -61,7 +67,7 @@
 
             function animate(){
                 viewPort.reset();
-                const activeGraph = graphEditor.graph;
+                const activeGraph = tools['graph'].editor.graph;
                 if(activeGraph.hash() !== currentGraphHash){
                     world.graph = activeGraph;
                     world.generate();
@@ -72,17 +78,17 @@
 
                 world.draw(ctx, viewPoint);
                 ctx.globalAlpha = 0.2;
-                graphEditor.display();
-                stopEditor.display();
-                zebraEditor.display();
+                for(const tool of Object.values(tools)){
+                    tool.editor.display();
+                }
                 requestAnimationFrame(animate);
             }
 
             function dispose(){
-                graphEditor.dispose();
+                tools['graph'].editor.dispose();
                 // Reset to a fresh graph instance
                 const emptyGraph = new Graph();
-                graphEditor.graph = emptyGraph;
+                tools['graph'].graph = emptyGraph;
                 world.graph = emptyGraph;
                 world.envelopes = [];
                 world.roadBorders = [];
@@ -100,37 +106,17 @@
 
             function setMode(mode){
                 disableEditors(); //disable buttons
-                switch(mode){
-                    case "graph":
-                        graphBtn.style.backgroundColor = "white";
-                        graphBtn.style.filter = "";
-                        graphEditor.enable();
-                        break;
-                    
-                    case "stop":
-                        stopBtn.style.backgroundColor = "white";
-                        stopBtn.style.filter = "";
-                        stopEditor.enable();
-                        break;
-
-                    case 'zebra':
-                        zebraBtn.style.backgroundColor = "white";
-                        zebraBtn.style.filter = "";
-                        zebraEditor.enable();
-                        break;
-                }
+                tools[mode].button.style.backgroundColor = "white";
+                tools[mode].button.style.filter = "";
+                tools[mode].editor.enable();
             }
 
             function disableEditors(){
-                graphBtn.style.backgroundColor = "gray";
-                graphBtn.style.filter = "grayscale(100%)";
-                graphEditor.disable();
-                stopBtn.style.backgroundColor = "gray";
-                stopBtn.style.filter = "grayscale(100%)";
-                stopEditor.disable();
-                zebraBtn.style.backgroundColor = "gray";
-                zebraBtn.style.filter = "grayscale(100%)";
-                zebraEditor.disable();
+                for(const tool of Object.values(tools)){
+                    tool.button.style.backgroundColor = "gray";
+                    tool.button.style.filter = "grayscale(100%)";  
+                    tool.editor.disable();
+                }
             }
 
         </script>
