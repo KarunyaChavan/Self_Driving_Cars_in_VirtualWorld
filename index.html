@@ -9,15 +9,12 @@
         <canvas id="myCanvas"></canvas>
         
         <div id="controls">
-            <!-- Defining Controls (buttons) to add points and segments -->
-            <!-- <button onclick="addRandomPoint()">Add Point</button>
-            <button onclick="addRandomSegment()">Add Segment</button>
-            <button onclick="removeRandomSegment()">Remove Segment</button>
-            <button onclick="removeRandomPoint()">Remove Point</button>
-            <button onclick="removeAll()">Clear</button> -->
-
             <button onclick="dispose()" style="background-color: steelblue;">🗑️</button>
             <button onclick="save()" style="background-color: steelblue;">📄</button>
+            &nbsp;
+            <!-- Controls for toggling Graph Editor Mode and Stop Mode -->
+            <button id="graphBtn" onclick="setMode('graph')">🌐</button> <!--Enables Graph Editor-->
+            <button id="stopBtn" onclick="setMode('stop')">🛑</button>
         </div>
 
         
@@ -40,58 +37,6 @@
 
             const ctx = myCanvas.getContext("2d");
 
-            // Functions to implement basic controls(buttons) for static version
-            // function addRandomPoint(){
-            //     const success = graph.tryAddPoint(
-            //         new Point(
-            //             Math.random() * myCanvas.width,
-            //             Math.random() * myCanvas.height
-            //         )
-            //     );
-            //     ctx.clearRect(0,0, myCanvas.width, myCanvas.height); //clearing the canvas initially
-            //     graph.draw(ctx);
-            //     console.log("Point Added: ", success);
-            // }
-
-            // function addRandomSegment(){
-            //     const index1 = Math.floor(Math.random() * graph.points.length);
-            //     const index2 = Math.floor(Math.random() * graph.points.length);
-            //     const success = graph.tryAddSegment(
-            //             new Segment(graph.points[index1], graph.points[index2])
-            //     );
-            //     ctx.clearRect(0,0, myCanvas.width, myCanvas.height);
-            //     graph.draw(ctx);
-            //     console.log("Segment Added: ", success)
-            // }
-
-            // function removeRandomSegment(){
-            //     if(graph.segments.length == 0) {
-            //         console.log("No Segments");
-            //         return;
-            //     }
-            //     const index = Math.floor(Math.random() * graph.segments.length);
-            //     graph.removeSegment(graph.segments[index]);
-            //     ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
-            //     graph.draw(ctx);
-            // }
-
-            // function removeRandomPoint(){
-            //     if(graph.points.length == 0) {
-            //         console.log("No Points");
-            //         return;
-            //     }
-            //     const index = Math.floor(Math.random() * graph.points.length);
-            //     graph.removePoint(graph.points[index]);
-            //     ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
-            //     graph.draw(ctx);
-            // }
-
-            // function removeAll(){
-            //     graph.dispose();
-            //     ctx.clearRect(0, 0, myCanvas.width, myCanvas.height);
-            //     graph.draw(ctx);
-            // }
-
             const graphString = localStorage.getItem("graph");
             const graphInfo = graphString ? JSON.parse(graphString) : null;
             const graph = graphInfo ? Graph.load(graphInfo) : new Graph();
@@ -99,14 +44,19 @@
             const viewPort = new ViewPort(myCanvas);
             const graphEditor = new GraphEditor(viewPort, graph); //myCanvas would be used for event listening
 
-            let oldGraphHash = graph.hash(); //implemented hash to avoid rapid re-rendering of graph
+            let currentGraphHash = graph.hash(); // track active graph hash to avoid unnecessary regeneration
+
+            setMode("graph");
+
             animate();
 
             function animate(){
                 viewPort.reset();
-                if(graph.hash() != oldGraphHash){
+                const activeGraph = graphEditor.graph;
+                if(activeGraph.hash() !== currentGraphHash){
+                    world.graph = activeGraph;
                     world.generate();
-                    oldGraphHash = graph.hash();
+                    currentGraphHash = activeGraph.hash();
                 }
                 //calculating viewPoint to obtain perspective for pseudo-3d in trees
                 const viewPoint = scale(viewPort.getOffset(), -1);
@@ -124,13 +74,42 @@
                 graphEditor.graph = emptyGraph;
                 world.graph = emptyGraph;
                 world.envelopes = [];
-                world.intersections = [];
+                world.roadBorders = [];
+                world.buildings = [];
+                world.trees = [];
+                currentGraphHash = emptyGraph.hash();
+                setMode("graph");
             }
 
             function save(){
                 // Persist the current working graph (handles post-dispose cases)
                 localStorage.setItem("graph", JSON.stringify(graphEditor.graph));
             }
+
+            function setMode(mode){
+                disableEditors(); //disable buttons
+                switch(mode){
+                    case "graph":
+                        graphBtn.style.backgroundColor = "white";
+                        graphBtn.style.filter = "";
+                        graphEditor.enable();
+                        break;
+                    
+                    case "stop":
+                        stopBtn.style.backgroundColor = "white";
+                        stopBtn.style.filter = "";
+                        break;
+                }
+            }
+
+            function disableEditors(){
+                graphBtn.style.backgroundColor = "gray";
+                graphBtn.style.filter = "grayscale(100%)";
+                graphEditor.disable();
+                stopBtn.style.backgroundColor = "gray";
+                stopBtn.style.filter = "grayscale(100%)";
+            }
+
         </script>
     </body>
 </html>
