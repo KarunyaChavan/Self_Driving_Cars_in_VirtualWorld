@@ -1,14 +1,15 @@
-class StopEditor extends MarkingEditor{
+class ZebraEditor extends MarkingEditor{
     constructor(viewport, world){
-        super(viewport, world, world.laneGuides);
+        super(viewport, world, world.graph.segments);
     }
 
     createMarking(center, directionVector){
-        return new Stop(
+        return new Zebra(
             center,
             directionVector,
-            world.roadWidth/2,
+            world.roadWidth,
             world.roadWidth/2
-        );
+        )
     }
+
 }

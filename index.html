@@ -15,14 +15,19 @@
             <!-- Controls for toggling Graph Editor Mode and Stop Mode -->
             <button id="graphBtn" onclick="setMode('graph')">🌐</button> <!--Enables Graph Editor-->
             <button id="stopBtn" onclick="setMode('stop')">🛑</button>
+            <button id="zebraBtn" onclick="setMode('zebra')">🚶</button>
         </div>
 
         
         <script src="js/world.js"></script>
         <script src="js/viewport.js"></script>
+        <script src="js/markings/marking.js"></script>
+        <script src="js/markings/zebra.js"></script>
         <script src="js/markings/stop.js"></script>
-        <script src="js/editors/graphEditor.js"></script>
+        <script src="js/editors/markingEditor.js"></script>
+        <script src="js/editors/zebraEditor.js"></script>
         <script src="js/editors/stopEditor.js"></script>
+        <script src="js/editors/graphEditor.js"></script>
         <script src="js/items/building.js"></script>
         <script src="js/items/tree.js"></script>
         <script src="js/math/utils.js"></script>
@@ -46,6 +51,7 @@
             const viewPort = new ViewPort(myCanvas);
             const graphEditor = new GraphEditor(viewPort, graph); //myCanvas would be used for event listening
             const stopEditor = new StopEditor(viewPort, world);
+            const zebraEditor = new ZebraEditor(viewPort, world);
 
             let currentGraphHash = graph.hash(); // track active graph hash to avoid unnecessary regeneration
 
@@ -68,6 +74,7 @@
                 ctx.globalAlpha = 0.2;
                 graphEditor.display();
                 stopEditor.display();
+                zebraEditor.display();
                 requestAnimationFrame(animate);
             }
 
@@ -105,6 +112,12 @@
                         stopBtn.style.filter = "";
                         stopEditor.enable();
                         break;
+
+                    case 'zebra':
+                        zebraBtn.style.backgroundColor = "white";
+                        zebraBtn.style.filter = "";
+                        zebraEditor.enable();
+                        break;
                 }
             }
 
@@ -115,6 +128,9 @@
                 stopBtn.style.backgroundColor = "gray";
                 stopBtn.style.filter = "grayscale(100%)";
                 stopEditor.disable();
+                zebraBtn.style.backgroundColor = "gray";
+                zebraBtn.style.filter = "grayscale(100%)";
+                zebraEditor.disable();
             }
 
         </script>
