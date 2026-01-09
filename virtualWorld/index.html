@@ -15,6 +15,7 @@
                 📂
                 <input type="file" id="fileInput" accept=".world" onchange="load(event)">
             </label>
+            <button onclick="openOsmPanel()">🗺️</button>
             &nbsp;
             <!-- Controls for toggling Graph Editor Mode and Stop Mode -->
             <button id="graphBtn" onclick="setMode('graph')">🌐</button> <!--Enables Graph Editor-->
@@ -25,6 +26,16 @@
             <button id="parkingBtn" onclick="setMode('parking')">🅿️</button>
             <button id="lightBtn" onclick="setMode('light')">🚦</button>
             <button id="targetBtn" onclick="setMode('target')">🎯</button>
+
+            <div id="osmPanel" style="display:none;">
+                <textarea id="osmDataContainer" rows="10" cols="50" 
+                    placeholder="Paste OSM data here">
+                </textarea>
+                <div>
+                    <button onclick="parseOsmData()">✔️</button>
+                    <button onclick="closeOsmPanel()">❌</button>
+                </div>
+            </div>
         </div>
 
         
@@ -170,6 +181,25 @@
                 }
             }
 
+            function openOsmPanel() {
+            osmPanel.style.display = "block";
+            }
+
+            function closeOsmPanel() {
+                osmPanel.style.display = "none";
+            }
+
+            function parseOsmData() {
+                if (osmDataContainer.value == "") {
+                    alert("Paste data first");
+                    return;
+                }
+                const res = Osm.parseRoads(JSON.parse(osmDataContainer.value));
+                graph.points = res.points;
+                graph.segments = res.segments;
+                closeOsmPanel();
+            }
+            
         </script>
     </body>
 </html>
