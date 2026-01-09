@@ -15,11 +15,11 @@ const networkCtx = networkCanvas.getContext("2d");
 // Toggle to drive a single car manually with arrow keys
 const manualMode = false;
 
-// const worldString = localStorage.getItem("world");
-// const worldInfo = worldString ? JSON.parse(worldString) : null;
-// const world = worldInfo
-//    ? World.load(worldInfo)
-//    : new World(new Graph());
+const worldString = localStorage.getItem("world");
+const worldInfo = worldString ? JSON.parse(worldString) : null;
+const world = worldInfo
+   ? World.load(worldInfo)
+   : new World(new Graph());
 
 
 const viewport = new ViewPort(carCanvas, world.zoom, world.offset);
