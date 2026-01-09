@@ -9,6 +9,12 @@ class Polygon{
         }
     }
 
+    static load(info){
+        return new Polygon(
+            info.points.map((i) => new Point(i.x, i.y))
+        );
+    }
+
     static break(poly1, poly2){
         const segs1 = poly1.segments;
         const segs2 = poly2.segments;

@@ -28,6 +28,24 @@ class World{
         this.generate();
     }
 
+    static load(info){
+        const world = new World(new Graph());
+        world.graph = Graph.load(info.graph); //step 1: first loading graph foundation
+        //step 2: Loading attributes
+        world.roadWidth = info.roadWidth;
+        world.roadRoundness = info.roundness;
+        world.buildingWidth = info.buildingWidth;
+        world.buildingMinLength = info.buildingMinLength;
+        world.spacing = info.spacing;
+        world.treeSize = info.treeSize;
+        //step 3: Loading structures - envelopes
+        world.envelopes = info.envelopes.map((e) => Envelope.load(e));
+        //step 4: Loading road borders
+        world.roadBorders = info.roadBorders.map((b) => new Segment(b.p1, b.p2));
+
+        return world;
+    }
+
     generate(){
         this.envelopes.length = 0;
         for(const seg of this.graph.segments){
