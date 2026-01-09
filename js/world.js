@@ -50,6 +50,9 @@ class World{
         world.laneGuides = info.laneGuides.map((g) => new Segment(g.p1, g.p2));
         //step 8: Loading Markings (Ensured all markings have their type property)
         world.markings = info.markings.map((m) => Marking.load(m));
+        //step 9: Preserving the viewport state (zoom and offset)
+        world.zoom = info.zoom;
+        world.offset = info.offset;
 
         return world;
     }

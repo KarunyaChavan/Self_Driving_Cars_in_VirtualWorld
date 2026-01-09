@@ -68,7 +68,7 @@
             let world = worldInfo ? World.load(worldInfo) : new World(new Graph()); //changed from const to let for persistance
             const graph = world.graph;
 
-            const viewport = new ViewPort(myCanvas);
+            const viewport = new ViewPort(myCanvas, world.zoom, world.offset);
 
             const graphEditor = new GraphEditor(viewport, graph);
 
@@ -125,6 +125,9 @@
             }
 
             function save(){
+                world.zoom = viewport.zoom;
+                world.offset = viewport.offset;
+
                 const element = document.createElement("a");
                 element.setAttribute(
                     "href",
