@@ -9,6 +9,9 @@ networkCanvas.height=window.innerHeight;
 const carCtx = carCanvas.getContext("2d");
 const networkCtx = networkCanvas.getContext("2d");
 
+// Toggle to drive a single car manually with arrow keys
+const manualMode = false;
+
 const worldString = localStorage.getItem("world");
 const worldInfo = worldString ? JSON.parse(worldString) : null;
 const world = worldInfo
@@ -16,10 +19,10 @@ const world = worldInfo
    : new World(new Graph());
 const viewport = new ViewPort(carCanvas, world.zoom, world.offset);
 
-const N=100;
-const cars=generateCars(N);
+const N = manualMode ? 1 : 1000;
+const cars = generateCars(N);
 let bestCar=cars[0];
-if(localStorage.getItem("bestBrain")){
+if(!manualMode && localStorage.getItem("bestBrain")){
     for(let i=0;i<cars.length;i++){
         cars[i].brain=JSON.parse(
             localStorage.getItem("bestBrain"));
@@ -55,7 +58,8 @@ function generateCars(N){
     
     const cars=[];
     for(let i=1;i<=N;i++){
-        cars.push(new Car(startPoint.x, startPoint.y,30,50,"AI",startAngle));
+                const controlType = manualMode ? "KEYS" : "AI";
+                cars.push(new Car(startPoint.x, startPoint.y,30,50,controlType,startAngle));
     }
     return cars;
 }
