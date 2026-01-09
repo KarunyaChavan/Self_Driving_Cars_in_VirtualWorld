@@ -1,38 +1,72 @@
 body{
     margin:0;
-    background:darkgray;
+    background:radial-gradient(circle at 30% 30%, #1f2733, #0f141b 55%, #0a0d12);
+    color:#e8ecf2;
     overflow:hidden;
     display:flex;
     justify-content:center;
     align-items:center;
+    gap:16px;
+    padding:16px;
+    font-family: "Segoe UI", Arial, sans-serif;
 }
 
 #verticalButtons{
     display:flex;
     flex-direction:column;
+    gap:8px;
+    background:rgba(15,20,27,0.85);
+    padding:8px;
+    border-radius:10px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.35);
 }
 
 button{
     border: none;
-    border-radius: 5px;
-    padding: 5px 5px 7px 5px;
-    margin: 2px;
+    border-radius: 8px;
+    padding: 6px 8px 9px 8px;
+    margin: 0;
     cursor:pointer;
+    background:linear-gradient(135deg, #3a8bff, #2b6adf);
+    color:#0b0f16;
+    font-weight:600;
+    box-shadow:0 6px 16px rgba(0,0,0,0.35);
+    transition:transform 120ms ease, box-shadow 120ms ease, filter 120ms ease;
 }
 button:hover{
-    background:blue;
+    transform:translateY(-1px);
+    box-shadow:0 10px 24px rgba(0,0,0,0.45);
+    filter:brightness(1.05);
+}
+button:active{
+    transform:translateY(0);
+    box-shadow:0 6px 14px rgba(0,0,0,0.4);
 }
 
 #miniMapCanvas{
-    background:black;
+    background:#05070c;
     border-radius:50%;
     clip-path:circle(50%);
     overflow:hidden;
+    box-shadow:0 10px 30px rgba(0,0,0,0.5);
+    border:2px solid rgba(255,255,255,0.06);
 }
 
-#networkCanvas{
-    background:black;
+#networkCanvas, #miniMapCanvas{
+    background-color:#0b1018;
+    background-image:
+        linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px),
+        linear-gradient(180deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size:40px 40px;
+    border-radius:10px;
 }
+
 #carCanvas{
     background:#2a5;
+    border-radius:16px;
+    box-shadow:0 16px 50px rgba(0,0,0,0.55);
+}
+
+canvas{
+    border:1px solid rgba(255,255,255,0.06);
 }
