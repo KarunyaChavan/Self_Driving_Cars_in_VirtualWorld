@@ -44,7 +44,7 @@ class World{
         world.roadBorders = info.roadBorders.map((b) => new Segment(b.p1, b.p2));
         //step 5: Loading buildings
         world.buildings = info.buildings.map((b) => Building.load(b));
-        //step 6: Loading trees
+        //step 6: Loading trees (avoided random spawing of trees)
         world.trees = info.trees.map((t) => new Tree(t.center, info.treeSize));
 
         return world;
