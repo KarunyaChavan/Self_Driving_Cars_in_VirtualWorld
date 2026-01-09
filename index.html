@@ -83,7 +83,7 @@
                 yield: { button: yieldBtn, editor: new YieldEditor(viewport, world)},
             };
 
-            let currentGraphHash = graph.hash(); // track active graph hash to avoid unnecessary regeneration
+            let oldGraphHash = graph.hash(); // track active graph hash to avoid unnecessary regeneration
 
             setMode("graph");
 
@@ -91,28 +91,26 @@
 
             function animate(){
                 viewport.reset();
-                const activeGraph = tools['graph'].editor.graph;
-                if(activeGraph.hash() !== currentGraphHash){
-                    world.graph = activeGraph;
+                if (graph.hash() != oldGraphHash) {
                     world.generate();
-                    currentGraphHash = activeGraph.hash();
+                    oldGraphHash = graph.hash();
                 }
 
                 //calculating viewPoint to obtain perspective for pseudo-3d in trees
                 const viewPoint = scale(viewport.getOffset(), -1);
 
                 world.draw(ctx, viewPoint);
-                ctx.globalAlpha = 0.2;
-                for(const tool of Object.values(tools)){
+                ctx.globalAlpha = 0.3;
+                for (const tool of Object.values(tools)) {
                     tool.editor.display();
                 }
                 requestAnimationFrame(animate);
             }
 
             function dispose() {
-            tools["graph"].editor.dispose();
-            world.markings.length = 0;
-         }
+                tools["graph"].editor.dispose();
+                world.markings.length = 0;
+            }
 
             function save(){
                 world.zoom = viewport.zoom;
