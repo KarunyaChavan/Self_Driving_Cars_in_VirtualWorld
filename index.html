@@ -105,19 +105,9 @@
                 requestAnimationFrame(animate);
             }
 
-            function dispose(){
-                tools['graph'].editor.dispose();
-                // Reset to a fresh graph instance
-                const emptyGraph = new Graph();
-                tools['graph'].graph = emptyGraph;
-                world.graph = emptyGraph;
-                world.envelopes = [];
-                world.roadBorders = [];
-                world.buildings = [];
-                world.trees = [];
-                world.markings = [];
-                currentGraphHash = emptyGraph.hash();
-                setMode("graph");
+            function dispose() {
+                tools["graph"].editor.dispose();
+                world.markings.length = 0;
             }
 
             function save(){
