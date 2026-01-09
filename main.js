@@ -25,7 +25,7 @@ const world = worldInfo
 const viewport = new ViewPort(carCanvas, world.zoom, world.offset);
 const miniMap = new MiniMap(miniMapCanvas, world.graph, 300);
 
-const N = manualMode ? 1 : 100;
+const N = manualMode ? 1 : 200;
 const cars = generateCars(N);
 let bestCar=cars[0];
 if(!manualMode && localStorage.getItem("bestBrain")){
