@@ -9,8 +9,12 @@
         <canvas id="myCanvas"></canvas>
         
         <div id="controls">
-            <button onclick="dispose()" style="background-color: steelblue;">🗑️</button>
-            <button onclick="save()" style="background-color: steelblue;">📄</button>
+            <button onclick="dispose()">🗑️</button>
+            <button onclick="save()">💾</button>
+            <label for="fileInput" class="file-input-label">
+                📂
+                <input type="file" id="fileInput" accept=".world" onchange="load(event)">
+            </label>
             &nbsp;
             <!-- Controls for toggling Graph Editor Mode and Stop Mode -->
             <button id="graphBtn" onclick="setMode('graph')">🌐</button> <!--Enables Graph Editor-->
@@ -61,7 +65,7 @@
 
             const worldString = localStorage.getItem("world");
             const worldInfo = worldString ? JSON.parse(worldString) : null;
-            const world = worldInfo ? World.load(worldInfo) : new World(new Graph());
+            let world = worldInfo ? World.load(worldInfo) : new World(new Graph()); //changed from const to let for persistance
             const graph = world.graph;
 
             const viewport = new ViewPort(myCanvas);
@@ -121,7 +125,41 @@
             }
 
             function save(){
+                const element = document.createElement("a");
+                element.setAttribute(
+                    "href",
+                    "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(world))
+                );
+
+                let fileName = prompt("Enter a file name to save", "world") || "world";
+                if (!fileName.toLowerCase().endsWith(".world")) {
+                    fileName += ".world";
+                }
+                element.setAttribute("download", fileName);
+
+                element.click();
+
                 localStorage.setItem("world", JSON.stringify(world));
+            }
+
+            function load(event){
+                const file = event.target.files[0];
+
+                if(!file){
+                    alert("No file selected");
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.readAsText(file);
+
+                reader.onload = (evt) => {
+                    const fileContent = evt.target.result;
+                    const worldInfo = JSON.parse(fileContent);
+                    world = World.load(worldInfo);
+                    localStorage.setItem("world", JSON.stringify(world));
+                    location.reload();
+                }
             }
 
             function setMode(mode){
