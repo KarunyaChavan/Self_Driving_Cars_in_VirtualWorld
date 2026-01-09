@@ -33,7 +33,7 @@ class World{
         world.graph = Graph.load(info.graph); //step 1: first loading graph foundation
         //step 2: Loading attributes
         world.roadWidth = info.roadWidth;
-        world.roadRoundness = info.roundness;
+        world.roadRoundness = info.roadRoundness;
         world.buildingWidth = info.buildingWidth;
         world.buildingMinLength = info.buildingMinLength;
         world.spacing = info.spacing;
@@ -46,6 +46,8 @@ class World{
         world.buildings = info.buildings.map((b) => Building.load(b));
         //step 6: Loading trees (avoided random spawing of trees)
         world.trees = info.trees.map((t) => new Tree(t.center, info.treeSize));
+        //step 7: Loading lane guides
+        world.laneGuides = info.laneGuides.map((g) => new Segment(g.p1, g.p2));
 
         return world;
     }
