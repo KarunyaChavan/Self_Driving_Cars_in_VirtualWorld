@@ -3,7 +3,7 @@ class Start extends Marking{
         super(center, directionVector, width, height);
 
         this.img = new Image();
-        const imgPath = "virtualWorld/assets/car.png";
+        const imgPath = "car.png";
         this.img.src = imgPath;
         
 
