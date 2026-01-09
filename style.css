@@ -25,6 +25,9 @@ button:hover{
 
 #miniMapCanvas{
     background:black;
+    border-radius:50%;
+    clip-path:circle(50%);
+    overflow:hidden;
 }
 
 #networkCanvas{
