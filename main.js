@@ -2,9 +2,12 @@ const carCanvas=document.getElementById("carCanvas");
 carCanvas.width=window.innerWidth - 330;
 const networkCanvas=document.getElementById("networkCanvas");
 networkCanvas.width=300;
+const miniMapCanvas=document.getElementById("miniMapCanvas");
+miniMapCanvas.width=300;
+miniMapCanvas.height=300;
 
 carCanvas.height=window.innerHeight;
-networkCanvas.height=window.innerHeight;
+networkCanvas.height=window.innerHeight-300;
 
 const carCtx = carCanvas.getContext("2d");
 const networkCtx = networkCanvas.getContext("2d");
@@ -12,14 +15,17 @@ const networkCtx = networkCanvas.getContext("2d");
 // Toggle to drive a single car manually with arrow keys
 const manualMode = false;
 
-const worldString = localStorage.getItem("world");
-const worldInfo = worldString ? JSON.parse(worldString) : null;
-const world = worldInfo
-   ? World.load(worldInfo)
-   : new World(new Graph());
-const viewport = new ViewPort(carCanvas, world.zoom, world.offset);
+// const worldString = localStorage.getItem("world");
+// const worldInfo = worldString ? JSON.parse(worldString) : null;
+// const world = worldInfo
+//    ? World.load(worldInfo)
+//    : new World(new Graph());
 
-const N = manualMode ? 1 : 1000;
+
+const viewport = new ViewPort(carCanvas, world.zoom, world.offset);
+const miniMap = new MiniMap(miniMapCanvas, world.graph, 300);
+
+const N = manualMode ? 1 : 100;
 const cars = generateCars(N);
 let bestCar=cars[0];
 if(!manualMode && localStorage.getItem("bestBrain")){
@@ -85,6 +91,7 @@ function animate(time){
     viewport.reset();
     const viewPoint = scale(viewport.getOffset(), -1);
     world.draw(carCtx, viewPoint, false);
+    miniMap.update(viewPoint)
 
     for(let i=0;i<traffic.length;i++){
         traffic[i].draw(carCtx);
