@@ -270,7 +270,7 @@ class World {
       this.#updateLights();
 
       for (const env of this.envelopes) {
-         env.draw(ctx, { fill: "#BBB", stroke: "#BBB", lineWidth: 15 });
+         env.draw(ctx, { fill: "#313030ff", stroke: "#313030ff", lineWidth: 15 });
       }
       for (const marking of this.markings) {
          if (!(marking instanceof Start) || showStartMarkings) {
