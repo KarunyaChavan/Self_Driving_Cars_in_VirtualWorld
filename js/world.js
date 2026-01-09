@@ -48,6 +48,8 @@ class World{
         world.trees = info.trees.map((t) => new Tree(t.center, info.treeSize));
         //step 7: Loading lane guides
         world.laneGuides = info.laneGuides.map((g) => new Segment(g.p1, g.p2));
+        //step 8: Loading Markings (Ensured all markings have their type property)
+        world.markings = info.markings.map((m) => Marking.load(m));
 
         return world;
     }
