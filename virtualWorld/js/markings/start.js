@@ -3,13 +3,15 @@ class Start extends Marking{
         super(center, directionVector, width, height);
 
         this.img = new Image();
-        this.img.src = "assets/car.png";
+        const imgPath = "virtualWorld/assets/car.png";
+        this.img.src = imgPath;
         
 
         this.type = "start";
     }
 
     draw(ctx){
+        if(!this.ready) return;
         ctx.save();
         ctx.translate(this.center.x, this.center.y);
         ctx.rotate(angle(this.directionVector) - Math.PI/2);
