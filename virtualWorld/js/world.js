@@ -266,14 +266,14 @@ class World {
       this.frameCount++;
    }
 
-   draw(ctx, viewPoint, showStartMarkings = true, renderRadius = 1000) {
+   draw(ctx, viewPoint) {
       this.#updateLights();
 
       for (const env of this.envelopes) {
          env.draw(ctx, { fill: "#313030ff", stroke: "#313030ff", lineWidth: 15 });
       }
       for (const marking of this.markings) {
-         if (!(marking instanceof Start) || showStartMarkings) {
+         if (!(marking instanceof Start)) {
             marking.draw(ctx);
          }
       }
@@ -294,7 +294,7 @@ class World {
       }
 
       const items = [...this.buildings, ...this.trees].filter(
-        (i) => i.base.distanceToPoint(viewPoint) < renderRadius
+        (i) => i.base.distanceToPoint(viewPoint) < 1000
       );
       items.sort(
          (a, b) =>
