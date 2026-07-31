@@ -15,11 +15,12 @@ const networkCtx = networkCanvas.getContext("2d");
 // Toggle to drive a single car manually with arrow keys
 const manualMode = false;
 
-const worldString = localStorage.getItem("world");
-const worldInfo = worldString ? JSON.parse(worldString) : null;
-const world = worldInfo
-   ? World.load(worldInfo)
-   : new World(new Graph());
+// Toggle world source: false = embedded OSM world (big.world), true = world saved with the editor (localStorage)
+const useStoredWorld = false;
+
+const world = useStoredWorld && localStorage.getItem("world")
+   ? World.load(JSON.parse(localStorage.getItem("world")))
+   : worldData;
 
 
 const viewport = new ViewPort(carCanvas, world.zoom, world.offset);
