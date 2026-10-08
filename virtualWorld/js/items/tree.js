@@ -20,8 +20,6 @@ class Tree{
     draw(ctx, viewPoint){
         const diff = subtract(this.center, viewPoint);
 
-        // this.center.draw(ctx, {size: this.size, color: "green"}); //already implemented at level 0 in the loop below
-
         const top = add(this.center, scale(diff, this.heightCoef));
 
         const levelCount = 7;
@@ -30,10 +28,8 @@ class Tree{
             const point = lerp2D(this.center, top, t);
             const color = "rgb(30," + lerp(50, 200, t) + ",70)"; //gradient shading to trees
             const size = lerp(this.size, 40, t);
-            // point.draw(ctx, {size, color}) //used for abstract desgin, but decided to added some noise
             const poly = this.#generateLevel(point, size);
             poly.draw(ctx, {fill: color, stroke: "rgba(0,0,0,0)"});
         }
-        // new Segment(this.center, top).draw(ctx); //added to identify the tree's vertical structure
     }
 }

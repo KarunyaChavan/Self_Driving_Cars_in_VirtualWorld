@@ -79,9 +79,10 @@ function animate(time){
         cars[i].update(roadBorders,traffic);
     }
     bestCar=cars.find(
-        c=>c.fittness==Math.max(
-            ...cars.map(c=>c.fittness)
-        ));
+        c=>c.fitness==Math.max(
+            ...cars.map(c=>c.fitness)
+        )
+    );
 
     world.cars = cars;
     world.bestCar = bestCar;
@@ -91,7 +92,7 @@ function animate(time){
 
     viewport.reset();
     const viewPoint = scale(viewport.getOffset(), -1);
-    world.draw(carCtx, viewPoint, false);
+    world.draw(carCtx, viewPoint);
     miniMap.update(viewPoint)
 
     for(let i=0;i<traffic.length;i++){

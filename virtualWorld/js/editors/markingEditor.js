@@ -33,7 +33,6 @@ class MarkingEditor{
         this.boundContextMenu = (evt) => evt.preventDefault();
         this.canvas.addEventListener("mousedown", this.boundMouseDown);
         this.canvas.addEventListener("mousemove", this.boundMouseMove);
-        this.canvas.addEventListener("mouseup", this.boundMouseUp);
         //to get rid of right click menu
         this.canvas.addEventListener("contextmenu", this.boundContextMenu);
     }
